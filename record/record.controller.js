@@ -40,7 +40,8 @@
             var action = ($rootScope.recordSidePanOpen ? logActions.tocHide : logActions.tocShow );
 
             var tocToggleHeader = {
-                action: action
+                action: action,
+                rid: $rootScope.tuple.defaultLogInfo.rid
             }
 
             logService.logClientAction(tocToggleHeader, $rootScope.reference.defaultLogInfo);
@@ -110,7 +111,8 @@
             var params = {
                 citation: tuple.citation,
                 displayname: refTable.name+'_'+tuple.uniqueId,
-                reference: ref
+                reference: ref,
+                tuple: tuple
             }
 
             var versionString = "@" + (ref.location.version || refTable.schema.catalog.snaptime);
@@ -122,7 +124,8 @@
             var snaptimeHeader = {
                 action: logActions.share,
                 catalog: ref.defaultLogInfo.catalog,
-                schema_table: ref.defaultLogInfo.schema_table
+                schema_table: ref.defaultLogInfo.schema_table,
+                rid: tuple.defaultLogInfo.rid
             }
             refTable.schema.catalog.currentSnaptime(snaptimeHeader).then(function (snaptime) {
                 // if current fetched snpatime doesn't match old snaptime, show a warning
@@ -227,7 +230,6 @@
         vm.toggleDisplayMode = function(dataModel) {
             event.preventDefault();
             event.stopPropagation();
-
             // if tableModel, table context is nested inside model
             var tableModel = dataModel;
             if (dataModel.tableModel) tableModel = dataModel.tableModel;
@@ -255,7 +257,10 @@
             }
 
             var toggleDisplayHeader = {
-                action: action
+                action: action,
+                main_rid: $rootScope.tuple.defaultLogInfo.rid,
+                main_st: $rootScope.reference.defaultLogInfo.schema_table,
+                source: tableModel.reference.dataSource
             }
 
             logService.logClientAction(toggleDisplayHeader, tableModel.reference.defaultLogInfo);
@@ -267,7 +272,8 @@
             var action = ($rootScope.showEmptyRelatedTables ? logActions.hideAllRelated : logActions.showAllRelated);
 
             var toggleAllRelatedTablesHeader = {
-                action: action
+                action: action,
+                rid: $rootScope.tuple.defaultLogInfo.rid
             }
 
             logService.logClientAction(toggleAllRelatedTablesHeader, $rootScope.reference.defaultLogInfo);
@@ -282,12 +288,16 @@
 
         vm.logAccordionClick = function (rtm) {
             var action = (rtm.open ? logActions.relatedClose : logActions.relatedOpen);
+            var relatedRef = rtm.tableModel.reference;
 
             var toggleRelatedTableHeader = {
-                action: action
+                action: action,
+                main_rid: $rootScope.tuple.defaultLogInfo.rid,
+                main_st: $rootScope.reference.defaultLogInfo.schema_table,
+                source: relatedRef.dataSource
             }
 
-            logService.logClientAction(toggleRelatedTableHeader, rtm.tableModel.reference.defaultLogInfo);
+            logService.logClientAction(toggleRelatedTableHeader, relatedRef.defaultLogInfo);
         }
 
         vm.canEditRelated = function(ref) {
@@ -532,7 +542,8 @@
         $scope.scrollToTop = function (fromToc) {
             var action = (fromToc ? logActions.tocScrollTop : logActions.scrollTop);
             var scrollTopHeader = {
-                action: action
+                action: action,
+                rid: $rootScope.tuple.defaultLogInfo.rid
             }
 
             logService.logClientAction(scrollTopHeader, $rootScope.reference.defaultLogInfo);
@@ -546,12 +557,16 @@
          */
         vm.scrollToSection = function (sectionId) {
             var relatedObj = determineScrollElement(sectionId);
+            var relatedRef = relatedObj.rtm.tableModel.reference;
 
             var scrollToHeader = {
-                action: logActions.tocScrollTo
+                action: logActions.tocScrollTo,
+                main_rid: $rootScope.tuple.defaultLogInfo.rid,
+                main_st: $rootScope.reference.defaultLogInfo.schema_table,
+                source: relatedRef.dataSource
             }
 
-            logService.logClientAction(scrollToHeader, relatedObj.rtm.tableModel.reference.defaultLogInfo);
+            logService.logClientAction(scrollToHeader, relatedRef.defaultLogInfo);
 
             scrollToElement(relatedObj.element);
         }

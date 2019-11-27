@@ -519,7 +519,7 @@
                 action: action
             }
 
-            if (vm.editMode) removeFormRowHeader.facet = defaultLogInfo.facet;
+            if (vm.editMode) removeFormRowHeader.rid = $rootScope.tuples[index].defaultLogInfo.rid;
 
             logService.logClientAction(removeFormRowHeader, defaultLogInfo);
 
@@ -583,9 +583,18 @@
 
         // toggles the state of the select all dialog
         vm.toggleSelectAll = function toggleSelectAll(index) {
-            var model = vm.recordEditModel.columnModels[index];
+            var model = vm.recordEditModel.columnModels[index],
+                column = model.column;
 
-            var defaultLogInfo = (model.column.reference ? model.column.reference.defaultLogInfo : $rootScope.reference.defaultLogInfo);
+            var defaultLogInfo, columnName;
+            if (column.reference) {
+                // foreign key picker
+                columnName = column.constraintName;
+                defaultLogInfo = column.reference.defaultLogInfo;
+            } else {
+                columnName = column.name;
+                defaultLogInfo = $rootScope.reference.defaultLogInfo;
+            }
 
             var action;
             if (vm.editMode) {
@@ -596,7 +605,8 @@
 
             var toggleSelectAllHeader = {
                 action: action,
-                column: model.column.name
+                column: columnName,
+                source: column.dataSource
             };
 
             logService.logClientAction(toggleSelectAllHeader, defaultLogInfo);
@@ -662,14 +672,25 @@
 
         // closes the select all
         vm.cancelSelectAll = function cancelSelectAll(index) {
-            var model = vm.recordEditModel.columnModels[index];
+            var model = vm.recordEditModel.columnModels[index],
+                column = model.column;
 
-            var defaultLogInfo = (model.column.reference ? model.column.reference.defaultLogInfo : $rootScope.reference.defaultLogInfo);
+            var defaultLogInfo, columnName;
+            if (column.reference) {
+                // foreign key picker
+                columnName = column.constraintName;
+                defaultLogInfo = column.reference.defaultLogInfo;
+            } else {
+                columnName = column.name;
+                defaultLogInfo = $rootScope.reference.defaultLogInfo;
+            }
+
             var action = (vm.editMode ? logActions.updateMultiCancel : logActions.createMultiCancel);
 
             var cancelSelectAllHeader = {
                 action: action,
-                column: model.column.name
+                column: columnName,
+                source: column.dataSource
             }
 
             logService.logClientAction(cancelSelectAllHeader, defaultLogInfo);
@@ -684,14 +705,14 @@
             if (model.inputType === "timestamp") {
                 vm.recordEditModel.rows.forEach(function (row) {
                     // the current row value is in the "disabled" format (aka a string)
-                    var value = row[model.column.name];
+                    var value = row[column.name];
                     var options = { outputType: "object" };
-                    row[model.column.name] = InputUtils.formatDatetime(value, options);
+                    row[column.name] = InputUtils.formatDatetime(value, options);
                 });
             } else if (model.inputType == "file") {
                 vm.recordEditModel.rows.forEach(function (row, index) {
                     // copy file values from submission model
-                    row[model.column.name] = vm.recordEditModel.submissionRows[index][model.column.name];
+                    row[column.name] = vm.recordEditModel.submissionRows[index][column.name];
                 });
             }
         }
@@ -774,14 +795,25 @@
         }
 
         vm.applySelectAll = function applySelectAll(index) {
-            var model = vm.recordEditModel.columnModels[index];
+            var model = vm.recordEditModel.columnModels[index],
+                column = model.column;
 
-            var defaultLogInfo = (model.column.reference ? model.column.reference.defaultLogInfo : $rootScope.reference.defaultLogInfo);
+            var defaultLogInfo, columnName;
+            if (column.reference) {
+                // foreign key picker
+                columnName = column.constraintName;
+                defaultLogInfo = column.reference.defaultLogInfo;
+            } else {
+                columnName = column.name;
+                defaultLogInfo = $rootScope.reference.defaultLogInfo;
+            }
+
             var action = (vm.editMode ? logActions.updateMultiApply : logActions.createMultiApply);
 
             var applySelectAllHeader = {
                 action: action,
-                column: model.column.name
+                column: columnName,
+                source: column.dataSource
             }
 
             logService.logClientAction(applySelectAllHeader, defaultLogInfo);
@@ -790,14 +822,25 @@
         }
 
         vm.clearSelectAll = function clearSelectAll(index) {
-            var model = vm.recordEditModel.columnModels[index];
+            var model = vm.recordEditModel.columnModels[index],
+                column = model.column;
 
-            var defaultLogInfo = (model.column.reference ? model.column.reference.defaultLogInfo : $rootScope.reference.defaultLogInfo);
+            var defaultLogInfo, columnName;
+            if (column.reference) {
+                // foreign key picker
+                columnName = column.constraintName;
+                defaultLogInfo = column.reference.defaultLogInfo;
+            } else {
+                columnName = column.name;
+                defaultLogInfo = $rootScope.reference.defaultLogInfo;
+            }
+
             var action = (vm.editMode ? logActions.updateMultiClear : logActions.createMultiClear);
 
             var clearSelectAllHeader = {
                 action: action,
-                column: model.column.name
+                column: columnName,
+                source: column.dataSource
             }
 
             logService.logClientAction(clearSelectAllHeader, defaultLogInfo);

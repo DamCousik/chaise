@@ -252,7 +252,9 @@
             },
             context:                    params.context,
             getDisabledTuples:          params.getDisabledTuples,
+            // used for logging
             logObject:                  params.logObject ? params.logObject: {},
+            facetColumnSource:          params.facetColumnSource,
             // TODO different modals should pass different strings (ultimatly it should be the element and not selector)
             parentContainerSelector:    ".search-popup .modal-content",
             parentStickyAreaSelector:   ".search-popup .modal-header",
@@ -388,7 +390,8 @@
 
         vm.copyToClipboard = function (text, action) {
             var copyLinkHeader = {
-                action: action
+                action: action,
+                rid: params.tuple.defaultLogInfo.rid
             }
 
             logService.logClientAction(copyLinkHeader, params.reference.defaultLogInfo);
@@ -411,7 +414,8 @@
 
         vm.logCitationDownload = function () {
             var citationDownloadHeader = {
-                action: logActions.cite
+                action: logActions.cite,
+                rid: params.tuple.defaultLogInfo.rid
             }
 
             logService.logClientAction(citationDownloadHeader, params.reference.defaultLogInfo);

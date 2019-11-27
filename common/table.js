@@ -918,7 +918,7 @@
 
             // this is for the button on the table heading that deselects all currently visible rows
             scope.selectNone = function($event) {
-                var action;
+                var action, source, main_st;
                 // "select none" only appears in P&B and all facet "Show More" links
                 switch (scope.vm.config.displayMode) {
                     case recordsetDisplayModes.addPureBinaryPopup:
@@ -928,6 +928,8 @@
                         switch (scope.vm.config.parentDisplayMode) {
                             case recordsetDisplayModes.fullscreen:
                                 action = logActions.recordsetFacetNone;
+                                main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                                source = scope.vm.facetColumnSource;
                                 break;
                             case recordsetDisplayModes.addPureBinaryPopup:
                                 action = logActions.recordPBFacetNone;
@@ -947,6 +949,9 @@
                 var noneHeader = {
                     action: action
                 }
+
+                if (main_st) noneHeader.main_st = main_st;
+                if (source) noneHeader.source = source;
 
                 logService.logClientAction(noneHeader, scope.vm.reference.defaultLogInfo);
 
@@ -972,7 +977,7 @@
 
             // this is for the button on the table heading that selects all currently visible rows
             scope.selectAll = function($event) {
-                var action;
+                var action, main_st, source;
                 // "select all" only appears in P&B and all facet "Show More" links
                 switch (scope.vm.config.displayMode) {
                     case recordsetDisplayModes.addPureBinaryPopup:
@@ -982,6 +987,8 @@
                         switch (scope.vm.config.parentDisplayMode) {
                             case recordsetDisplayModes.fullscreen:
                                 action = logActions.recordsetFacetAll;
+                                main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                                source = scope.vm.facetColumnSource;
                                 break;
                             case recordsetDisplayModes.addPureBinaryPopup:
                                 action = logActions.recordPBFacetAll;
@@ -1001,6 +1008,9 @@
                 var allHeader = {
                     action: action
                 }
+
+                if (main_st) allHeader.main_st = main_st;
+                if (source) allHeader.source = source;
 
                 logService.logClientAction(allHeader, scope.vm.reference.defaultLogInfo);
 
@@ -1111,7 +1121,7 @@
             }
 
             scope.toggleFacetPanel = function () {
-                var action;
+                var action, main_st, source;
                 var panelOpen = scope.vm.config.facetPanelOpen;
                 // facet panel can only be toggled in main recordset, p&b add, and fk add/edit
                 switch (scope.vm.config.displayMode) {
@@ -1120,6 +1130,8 @@
                         break;
                     case recordsetDisplayModes.addPureBinaryPopup:
                         action = (panelOpen ? logActions.recordPBClose : logActions.recordPBOpen );
+                        main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                        source = scope.vm.facetColumnSource;
                         break;
                     case recordsetDisplayModes.foreignKeyPopupCreate:
                     case recordsetDisplayModes.foreignKeyPopupEdit:
@@ -1172,7 +1184,7 @@
 
             // function for removing all pills regardless of what page they are on, clears the whole selectedRows array
             scope.removeAllPills = function($event) {
-                var action;
+                var action, main_st, source;
                 // "remove all" only appears in P&B and all facet "Show More" links
                 switch (scope.vm.config.displayMode) {
                     case recordsetDisplayModes.addPureBinaryPopup:
@@ -1182,6 +1194,8 @@
                         switch (scope.vm.config.parentDisplayMode) {
                             case recordsetDisplayModes.fullscreen:
                                 action = logActions.recordsetFacetClear;
+                                main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                                source = scope.vm.facetColumnSource;
                                 break;
                             case recordsetDisplayModes.addPureBinaryPopup:
                                 action = logActions.recordPBFacetClear;
@@ -1201,6 +1215,9 @@
                 var clearAllHeader = {
                     action: action
                 }
+
+                if (main_st) clearAllHeader.main_st = main_st;
+                if (source) clearAllHeader.source = source;
 
                 logService.logClientAction(clearAllHeader, scope.vm.reference.defaultLogInfo);
 
@@ -1453,16 +1470,24 @@
                 };
 
                 scope.pageSizeDropdownOpened = function () {
-                    var action;
+                    var pageSizeHeader = {}
+
+                    var action, source, main_rid, main_st;
                     switch (scope.vm.config.displayMode) {
                         case recordsetDisplayModes.fullscreen:
                             action = logActions.recordsetPageSize;
                             break;
                         case recordsetDisplayModes.inline:
                             action = logActions.inlinePageSize;
+                            main_rid = scope.vm.parentTuple.defaultLogInfo.rid;
+                            main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                            source = scope.vm.reference.dataSource;
                             break;
                         case recordsetDisplayModes.related:
                             action = logActions.relatedPageSize;
+                            main_rid = scope.vm.parentTuple.defaultLogInfo.rid;
+                            main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                            source = scope.vm.reference.dataSource;
                             break;
                         case recordsetDisplayModes.addPureBinaryPopup:
                             action = logActions.recordPBPageSize;
@@ -1475,6 +1500,8 @@
                             switch (scope.vm.config.parentDisplayMode) {
                                 case recordsetDisplayModes.fullscreen:
                                     action = logActions.recordsetFacetPageSize;
+                                    main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                                    source = scope.vm.facetColumnSource;
                                     break;
                                 case recordsetDisplayModes.addPureBinaryPopup:
                                     action = logActions.recordPBFacetPageSize;
@@ -1491,9 +1518,10 @@
                             break;
                     }
 
-                    var pageSizeHeader = {
-                        action: action
-                    }
+                    pageSizeHeader.action = action;
+                    if (source) pageSizeHeader.source = source;
+                    if (main_rid) pageSizeHeader.main_rid = main_rid;
+                    if (main_st) pageSizeHeader.main_st = main_st;
 
                     logService.logClientAction(pageSizeHeader, scope.vm.reference.defaultLogInfo);
                 }

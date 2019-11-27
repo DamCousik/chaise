@@ -28,19 +28,26 @@
                 var isRecordset = (scope.displayMode == recordsetDisplayModes.fullscreen),
                     isInline = (scope.displayMode == recordsetDisplayModes.inline);
 
+                var actionHeader = {
+                    rid: scope.tuple.defaultLogInfo.rid
+                }
+
                 var action;
                 if (isRecordset) {
                     action = logActions.deleteIntend;
-                } else if (isInline) {
-                    action = (scope.isUnLink ? logActions.inlineUnlinkIntend : logActions.inlineDeleteIntend );
                 } else {
-                    action = (scope.isUnLink ? logActions.relatedUnlinkIntend : logActions.relatedDeleteIntend );
+                    actionHeader.source = scope.tableModel.reference.dataSource;
+                    actionHeader.main_rid = scope.parentTuple.defaultLogInfo.rid;
+                    actionHeader.main_st = scope.parentReference.defaultLogInfo.schema_table;
+
+                    if (isInline) {
+                        action = (scope.isUnLink ? logActions.inlineUnlinkIntend : logActions.inlineDeleteIntend );
+                    } else {
+                        action = (scope.isUnLink ? logActions.relatedUnlinkIntend : logActions.relatedDeleteIntend );
+                    }
                 }
 
-                var actionHeader = {
-                    action: action,
-                    facet: reference.defaultLogInfo.facet
-                }
+                actionHeader.action = action;
 
                 var onError = function (response) {
                     scope.$root.showSpinner = false;

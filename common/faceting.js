@@ -1297,6 +1297,10 @@
                         params.mode = "selectFaceting";
                         params.showFaceting = false;
 
+                        if (scope.facetColumn) {
+                            params.facetColumnSource = scope.facetColumn.dataSource;
+                        }
+
                         if (scope.facetColumn.hasNotNullFilter) {
                             params.matchNotNull = true;
                         }
@@ -1354,10 +1358,12 @@
                             size: modalUtils.getSearchPopupSize(params),
                             templateUrl:  UriUtils.chaiseDeploymentPath() + "common/templates/searchPopup.modal.html"
                         }, modalDataChanged(scope, true), function () {
-                            var action;
+                            var action, main_st, source;
                             switch (params.parentDisplayMode) {
                                 case recordsetDisplayModes.fullscreen:
                                     action = logActions.recordsetFacetCancel;
+                                    main_st = params.parentReference.defaultLogInfo.schema_table;
+                                    source = scope.facetColumn.dataSource;
                                     break;
                                 case recordsetDisplayModes.addPureBinaryPopup:
                                     action = logActions.recordPBFacetCancel;
@@ -1371,6 +1377,9 @@
                             var cancelHeader = {
                                 action: action
                             }
+
+                            if (main_st) cancelHeader.main_st = main_st;
+                            if (source) cancelHeader.source = source;
 
                             logService.logClientAction(cancelHeader, params.reference.defaultLogInfo);
                         }, false);
