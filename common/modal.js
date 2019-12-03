@@ -254,7 +254,7 @@
             getDisabledTuples:          params.getDisabledTuples,
             // used for logging
             logObject:                  params.logObject ? params.logObject: {},
-            facetColumnSource:          params.facetColumnSource,
+            columnSource:          params.columnSource,
             // TODO different modals should pass different strings (ultimatly it should be the element and not selector)
             parentContainerSelector:    ".search-popup .modal-content",
             parentStickyAreaSelector:   ".search-popup .modal-header",

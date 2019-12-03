@@ -182,6 +182,8 @@
         "exportOpen": "export/open", // export dropdown was opened
         "permalinkLeft": "permalink/lclick", // permalink left clicked (copied)
         "permalinkRight": "permalink/rclick", // permalink right clicked (contextmenu opened)
+        "facetOpen": "facet-header/open", // facet header toggled open
+        "facetClose": "facet-header/close", // facet header toggled close
         // ### recordset directive for facet popups
         "recordsetPageSize": "page-size", // page size dropdown opened
         "recordsetFacetOpen": "panel/show", // facet panel opened

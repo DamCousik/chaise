@@ -303,6 +303,7 @@
 
             params.reference = column.filteredRef(submissionRow, vm.recordEditModel.foreignKeyData[rowIndex]).contextualize.compactSelect;
             params.reference.session = $rootScope.session;
+            params.columnSource = column.dataSource;
 
             params.logObject = params.reference.defaultLogInfo;
             params.logObject.referrer = params.parentReference.defaultLogInfo;
@@ -346,7 +347,9 @@
                 vm.recordEditModel.rows[rowIndex][column.name] = tuple.displayname.value;
             }, function modalCanceled() {
                 var fkCancelHeader = {
-                    action: logActions.recordeditFKCancel
+                    action: logActions.recordeditFKCancel,
+                    main_st: params.parentReference.defaultLogInfo.schema_table,
+                    source: params.columnSource
                 }
 
                 logService.logClientAction(fkCancelHeader, params.reference.defaultLogInfo);

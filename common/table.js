@@ -923,13 +923,15 @@
                 switch (scope.vm.config.displayMode) {
                     case recordsetDisplayModes.addPureBinaryPopup:
                         action = logActions.recordPBNone;
+                        main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                        source = scope.vm.columnSource;
                         break;
                     case recordsetDisplayModes.facetPopup:
                         switch (scope.vm.config.parentDisplayMode) {
                             case recordsetDisplayModes.fullscreen:
                                 action = logActions.recordsetFacetNone;
                                 main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
-                                source = scope.vm.facetColumnSource;
+                                source = scope.vm.columnSource;
                                 break;
                             case recordsetDisplayModes.addPureBinaryPopup:
                                 action = logActions.recordPBFacetNone;
@@ -982,13 +984,15 @@
                 switch (scope.vm.config.displayMode) {
                     case recordsetDisplayModes.addPureBinaryPopup:
                         action = logActions.recordPBAll;
+                        main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                        source = scope.vm.columnSource;
                         break;
                     case recordsetDisplayModes.facetPopup:
                         switch (scope.vm.config.parentDisplayMode) {
                             case recordsetDisplayModes.fullscreen:
                                 action = logActions.recordsetFacetAll;
                                 main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
-                                source = scope.vm.facetColumnSource;
+                                source = scope.vm.columnSource;
                                 break;
                             case recordsetDisplayModes.addPureBinaryPopup:
                                 action = logActions.recordPBFacetAll;
@@ -1131,11 +1135,13 @@
                     case recordsetDisplayModes.addPureBinaryPopup:
                         action = (panelOpen ? logActions.recordPBClose : logActions.recordPBOpen );
                         main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
-                        source = scope.vm.facetColumnSource;
+                        source = scope.vm.columnSource;
                         break;
                     case recordsetDisplayModes.foreignKeyPopupCreate:
                     case recordsetDisplayModes.foreignKeyPopupEdit:
                         action = (panelOpen ? logActions.recordeditFKClose : logActions.recordeditFKOpen );
+                        main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                        source = scope.vm.columnSource;
                         break;
                     default:
                         break;
@@ -1144,6 +1150,9 @@
                 var toggleFacetPanelHeader = {
                     action: action
                 }
+
+                if (main_st) toggleFacetPanelHeader.main_st = main_st;
+                if (source) toggleFacetPanelHeader.source = source;
 
                 logService.logClientAction(toggleFacetPanelHeader, scope.vm.reference.defaultLogInfo);
 
@@ -1189,13 +1198,15 @@
                 switch (scope.vm.config.displayMode) {
                     case recordsetDisplayModes.addPureBinaryPopup:
                         action = logActions.recordPBClear;
+                        main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                        source = scope.vm.columnSource;
                         break;
                     case recordsetDisplayModes.facetPopup:
                         switch (scope.vm.config.parentDisplayMode) {
                             case recordsetDisplayModes.fullscreen:
                                 action = logActions.recordsetFacetClear;
                                 main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
-                                source = scope.vm.facetColumnSource;
+                                source = scope.vm.columnSource;
                                 break;
                             case recordsetDisplayModes.addPureBinaryPopup:
                                 action = logActions.recordPBFacetClear;
@@ -1491,17 +1502,21 @@
                             break;
                         case recordsetDisplayModes.addPureBinaryPopup:
                             action = logActions.recordPBPageSize;
+                            main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                            source = scope.vm.columnSource;
                             break;
                         case recordsetDisplayModes.foreignKeyPopupCreate:
                         case recordsetDisplayModes.foreignKeyPopupEdit:
                             action = logActions.recordeditFKPageSize;
+                            main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
+                            source = scope.vm.columnSource;
                             break;
                         case recordsetDisplayModes.facetPopup:
                             switch (scope.vm.config.parentDisplayMode) {
                                 case recordsetDisplayModes.fullscreen:
                                     action = logActions.recordsetFacetPageSize;
                                     main_st = scope.vm.parentReference.defaultLogInfo.schema_table;
-                                    source = scope.vm.facetColumnSource;
+                                    source = scope.vm.columnSource;
                                     break;
                                 case recordsetDisplayModes.addPureBinaryPopup:
                                     action = logActions.recordPBFacetPageSize;

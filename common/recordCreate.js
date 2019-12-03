@@ -352,6 +352,7 @@
             params.displayMode = recordsetDisplayModes.addPureBinaryPopup;
             params.parentDisplayMode = dcctx.cid; // should be "record"
 
+            params.columnSource = domainRef.dataSource;
             params.reference = domainRef.unfilteredReference.contextualize.compactSelect;
             params.reference.session = rsSession;
             params.context = "compact/select";
@@ -408,7 +409,9 @@
                 }
             }, function () {
                 var pbCancelHeader = {
-                    action: logActions.recordPBCancel
+                    action: logActions.recordPBCancel,
+                    main_st: params.parentReference.defaultLogInfo.schema_table,
+                    scource: params.columnSource
                 }
 
                 logService.logClientAction(pbCancelHeader, params.reference.defaultLogInfo);

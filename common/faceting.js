@@ -48,7 +48,7 @@
             };
         }])
 
-        .directive('faceting', ['$log', 'recordTableUtils', '$rootScope', '$timeout', 'UriUtils', function ($log, recordTableUtils, $rootScope, $timeout, UriUtils) {
+        .directive('faceting', ['$log', 'logActions', 'logService', 'recordTableUtils', '$rootScope', '$timeout', 'UriUtils', function ($log, logActions, logService, recordTableUtils, $rootScope, $timeout, UriUtils) {
 
             return {
                 restrict: 'AE',
@@ -177,9 +177,19 @@
                      * @param  {int} index index of facet
                      */
                     scope.toggleFacet = function (index) {
-                        $timeout(function() {
-                            var fm = scope.vm.facetModels[index];
+                        var fm = scope.vm.facetModels[index];
+                        var fc = scope.vm.reference.facetColumns[index];
 
+                        var action = (fm.isOpen ? logActions.facetClose : logActions.facetOpen );
+                        var toggleFacetHeader = {
+                            action: action,
+                            main_st: scope.vm.reference.defaultLogInfo.schema_table,
+                            source: fc.dataSource
+                        }
+
+                        logService.logClientAction(toggleFacetHeader, scope.vm.reference.defaultLogInfo);
+
+                        $timeout(function() {
                             if (!fm.isOpen) {
                                 // make sure to get the result again later
                                 if (fm.isLoading) {
@@ -1298,7 +1308,7 @@
                         params.showFaceting = false;
 
                         if (scope.facetColumn) {
-                            params.facetColumnSource = scope.facetColumn.dataSource;
+                            params.columnSource = scope.facetColumn.dataSource;
                         }
 
                         if (scope.facetColumn.hasNotNullFilter) {

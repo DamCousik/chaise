@@ -36,7 +36,8 @@
                 display: '@',
                 callback: '&',
                 buttonSize: '@',
-                isDisabled: '='
+                isDisabled: '=',
+                logInfo: '&' // it's a function
             },
             link: function(scope) {
                 scope.deleteFn = function deleteFn() {
@@ -45,8 +46,10 @@
                         return scope.callback();
                     }
 
+                    var logInfo = scope.logInfo();
                     var popupHeader = {
-                        action: logActions.deleteIntend
+                        action: logActions.deleteIntend,
+                        rid: logInfo.rid
                     }
 
                     logService.logClientAction(popupHeader, scope.$root.reference.defaultLogInfo);
@@ -61,7 +64,8 @@
                         return scope.callback();
                     }, function onError() {
                         var cancelHeader = {
-                            action: logActions.deleteCancel
+                            action: logActions.deleteCancel,
+                            rid: logInfo.rid
                         }
 
                         logService.logClientAction(cancelHeader, scope.$root.reference.defaultLogInfo);
